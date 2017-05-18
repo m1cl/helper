@@ -9,7 +9,7 @@ STORAGENAME="test";
 
 if [ $2 -a $1 == "create" ]; then
 
-    # getops is a builtin shell command. It handels options/flags. 
+    # getops is a builtin shell command. It handels options/flags and their values. 
     while getops ":m" opt; do
         case $opt in 
             m) 
