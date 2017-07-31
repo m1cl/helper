@@ -4,6 +4,7 @@
 #
 #
 STORAGENAME="test";
+MEDIUM="";
 
 if [ $2 -a $1 == "create" ]; then
 
@@ -11,10 +12,13 @@ if [ $2 -a $1 == "create" ]; then
     # options also known as flags. In this case it looks 
     # if -m AND/OR -s flagsare passed by the user. 
     # $OPTARG contains value of the flag
-    while getops ":m" opt; do
+    while getopts ":s" opt; do
         case $opt in 
             m) 
                 vboxmanage modifyvm $2 --memory 2048 >&2
+                ;;
+            p) 
+                $MEDIUM=$OPTARG >&2
                 ;;
             s) 
                 $STORAGENAME=$OPTARG >&2
@@ -29,8 +33,8 @@ if [ $2 -a $1 == "create" ]; then
     vboxmanage createvm --name $2 --register
 
     # modifies storage device and sets the port(between 0 -2 ) and the device( must be 0, probably because only 1 storage exists)
-    vboxmanage storagectl $2 --name $STORAGENAME --add sata
-    vboxmanage storageattach $2 --storagectl $STORAGENAME --port 0 --device 0 --type hdd --medium emptydrive --comment "this is my first comment"
+    vboxmanage storagectl $2 --name $STORAGENAME --add IDE
+    vboxmanage storageattach $2 --storagectl $STORAGENAME --port 0 --device 0 --type dvddrive --medium "$MEDIUM" 
 else 
     echo "USAGE: $0 create YOURBOXNAME [-m MEMORYSIZE] [-s STORAGENAME]";
 fi
